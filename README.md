@@ -10,6 +10,7 @@ Part of **[Frequencies of Life](https://chethandvg.github.io/frequencies-of-life
 ## What is proved
 
 <!-- claims-table:start -->
+_No claims yet._
 <!-- claims-table:end -->
 
 Levels: **P** machine-checked proof (Lean 4) · **V** verified numerics · **T** tested · **R** referenced (DOI or PMID) · **M** model assumption.
