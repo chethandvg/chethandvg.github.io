@@ -43,8 +43,8 @@ The claim ID is permanent, so other repositories can depend on it and anyone can
 Instead of one large codebase, the project is a stack of small repositories, each with its own proofs, tests and documentation:
 
 - **Layer 0, foundations:** units, pitch and signal maths, proved where possible.
-- **Layer 1, data and models:** a dataset of biological rhythms where every number carries its DOI, models of egg activation, and the rules for turning data into sound.
-- **Layer 2, applications:** a sonification of fertilisation, generators for evidence-based functional music, and interactive explorers.
+- **Layer 1, data and models:** a dataset of biological rhythms where every number carries its DOI, models of egg activation, the rules for turning data into sound, and libraries for harmony and visuals.
+- **Layer 2, music and experiences:** an album that opens with a sonification of fertilisation, calm music with no health claims, and a browser music lab.
 - **Layer 3, research questions** that need partners, data or ethics approval before they can start.
 
 Each layer uses the ones below it as ordinary packages. A fix in a foundation repo flows upward, and the dependency graph shows exactly what rests on what.
@@ -56,7 +56,7 @@ Each layer uses the ones below it as ordinary packages. A fix in a foundation re
 - **Golden vectors**: one JSON file of input/output cases that the Rust crate, the Python package and the WebAssembly build must all reproduce.
 - **GitHub Actions**, written once in a shared repository and reused everywhere; **GitHub Pages** for the site; a **Zenodo DOI** for every release, so each version can be cited.
 
-The foundations are licensed Apache-2.0. The models, applications and data are free for non-commercial use.
+The foundations and the developer libraries are licensed Apache-2.0. The music and videos are CC BY 4.0, so anyone can reuse them with credit. The models, applications and data are free for non-commercial use.
 
 ## The first sprint
 

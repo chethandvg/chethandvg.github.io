@@ -53,4 +53,4 @@ If you use this work, please cite it. GitHub's **Cite this repository** button g
 
 ## Licence
 
-Code: Apache-2.0 ([LICENSE](LICENSE)). Articles, data, figures and audio: CC BY-NC 4.0 ([LICENSES/CC-BY-NC-4.0.txt](LICENSES/CC-BY-NC-4.0.txt)). Copyright notices are in [NOTICE](NOTICE).
+Code: Apache-2.0 ([LICENSE](LICENSE)). Articles, data and figures: CC BY-NC 4.0 ([LICENSES/CC-BY-NC-4.0.txt](LICENSES/CC-BY-NC-4.0.txt)). The project's music, audio and video are CC BY 4.0; each release states its licence. Copyright notices are in [NOTICE](NOTICE).
