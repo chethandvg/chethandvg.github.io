@@ -43,6 +43,7 @@ const code = (repo) => ({
   url: abs(repo.path),
   codeRepository: repo.github,
   license: spdx(repo.licence),
+  ...(repo.doi && { identifier: `https://doi.org/${repo.doi}` }),
   author: author(),
   isPartOf: project(),
 });

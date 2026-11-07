@@ -29,6 +29,7 @@ const posts = (await getPosts()).filter((p) => p.data.repo === repo.name);
     <dl class="facts">
       <dt>Repository</dt>
       <dd><a href={repo.github}><code>{repo.name}</code> on GitHub</a></dd>
+      {repo.doi && <><dt>Cite</dt><dd><a href={`https://doi.org/${repo.doi}`}>doi:{repo.doi}</a> (all versions, via Zenodo)</dd></>}
       <dt>Layer</dt>
       <dd>{repo.layerLabel}</dd>
       <dt>{repo.licences.length > 1 ? 'Licences' : 'Licence'}</dt>
