@@ -1,0 +1,19 @@
+---
+// SPDX-License-Identifier: Apache-2.0
+import { formatDate, isoDate, paths } from '../lib/site.mjs';
+const { posts, empty = 'No posts yet. The first one is on its way.', level = 3 } = Astro.props;
+const Heading = `h${level}`;
+---
+{posts.length ? (
+  <ol class="post-list">
+    {posts.map((post) => (
+      <li>
+        <article>
+          <Heading><a href={paths.post(post.id)}>{post.data.title}</a></Heading>
+          <p class="meta"><time datetime={isoDate(post.data.pubDate)}>{formatDate(post.data.pubDate)}</time>{post.data.draft && <span class="status status-planned">draft</span>}</p>
+          <p>{post.data.description}</p>
+        </article>
+      </li>
+    ))}
+  </ol>
+) : <p class="muted">{empty}</p>}

@@ -1,0 +1,61 @@
+---
+// SPDX-License-Identifier: Apache-2.0
+import Base from '../../../layouts/Base.astro';
+import ClaimsTable from '../../../components/ClaimsTable.astro';
+import PostList from '../../../components/PostList.astro';
+import RepoLinks from '../../../components/RepoLinks.astro';
+import Status from '../../../components/Status.astro';
+import { CRUMBS, repos, spdx } from '../../../lib/site.mjs';
+import { repoNodes } from '../../../lib/jsonld.mjs';
+import { getPosts } from '../../../lib/posts.mjs';
+import { repoSlug } from '../../../lib/routes.mjs';
+
+export function getStaticPaths() {
+  return repos.filter((r) => r.path).map((r) => ({ params: { repo: repoSlug(r.name) }, props: { repo: r } }));
+}
+
+const { repo } = Astro.props;
+const posts = (await getPosts()).filter((p) => p.data.repo === repo.name);
+---
+<Base
+  title={`${repo.title} (${repo.name})`}
+  description={repo.description}
+  crumbs={[CRUMBS.project, { name: repo.title, path: repo.path }]}
+  jsonLd={repoNodes(repo)}
+>
+  <section class="intro">
+    <h1>{repo.title}</h1>
+    <p class="lede">{repo.description}</p>
+    <dl class="facts">
+      <dt>Repository</dt>
+      <dd><a href={repo.github}><code>{repo.name}</code> on GitHub</a></dd>
+      <dt>Layer</dt>
+      <dd>{repo.layerLabel}</dd>
+      <dt>{repo.licences.length > 1 ? 'Licences' : 'Licence'}</dt>
+      <dd>{repo.licences.map((id, i) => <>{i > 0 && ' · '}<a href={spdx(id)}>{id}</a></>)}</dd>
+      <dt>Status</dt>
+      <dd><Status status={repo.status} /></dd>
+    </dl>
+  </section>
+
+  <section aria-labelledby="claims">
+    <h2 id="claims">Claims</h2>
+    <ClaimsTable repo={repo} />
+  </section>
+
+  <section class="two-up">
+    <div>
+      <h2>Depends on</h2>
+      <RepoLinks repos={repo.deps} empty="Nothing: this is a root of the graph." />
+    </div>
+    <div>
+      <h2>Used by</h2>
+      <RepoLinks repos={repo.usedBy} empty="No repository depends on this one yet." />
+    </div>
+  </section>
+
+  <section aria-labelledby="posts">
+    <h2 id="posts">Posts about this repo</h2>
+    <PostList posts={posts} empty="No posts about this repo yet." />
+  </section>
+</Base>

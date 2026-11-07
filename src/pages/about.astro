@@ -1,0 +1,28 @@
+---
+// SPDX-License-Identifier: Apache-2.0
+import Base from '../layouts/Base.astro';
+import { PROFILE, PROJECT, paths } from '../lib/site.mjs';
+---
+<Base
+  title="About"
+  description={`About ${PROFILE.name} (${PROFILE.alternateName}) and this site: what it covers, how it is built and how its content is licensed.`}
+  crumbs={[{ name: 'About', path: paths.about }]}
+>
+  <article class="prose">
+    <h1>About</h1>
+    <p>I'm {PROFILE.name}, also known as {PROFILE.alternateName}: a software engineer working with C#/.NET, Azure and applied AI.</p>
+    <p>
+      This site is my home on the web and the hub of <a href={paths.project}>{PROJECT.name}</a>, an open research project.
+      Each repository has a page here with its claims and how each one is known, and each <a href={paths.posts}>post</a> explains one piece of it.
+    </p>
+    <h2>How the site is built</h2>
+    <p>
+      It is a static site built with Astro and served by GitHub Pages. It has no tracking, no web fonts and no third-party scripts.
+      The <a href={`${PROFILE.github}/chethandvg.github.io`}>source is on GitHub</a>.
+    </p>
+    <h2>Licences</h2>
+    <p>Articles, data and figures are licensed under CC BY-NC 4.0; the site's code under Apache-2.0. Each repository states its own licence.</p>
+    <h2>Contact</h2>
+    <p>You can find me on <a rel="me" href={PROFILE.github}>GitHub</a>, <a rel="me" href={PROFILE.linkedin}>LinkedIn</a> and <a rel="me" href={PROFILE.orcid}>ORCID</a>. Corrections to a claim are welcome as an issue on its repository.</p>
+  </article>
+</Base>

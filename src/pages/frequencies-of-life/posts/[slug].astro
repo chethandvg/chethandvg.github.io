@@ -1,0 +1,49 @@
+---
+// SPDX-License-Identifier: Apache-2.0
+import { render } from 'astro:content';
+import Base from '../../../layouts/Base.astro';
+import { CRUMBS, formatDate, isoDate, paths, repo as findRepo } from '../../../lib/site.mjs';
+import { blogPosting } from '../../../lib/jsonld.mjs';
+import { getPosts, seriesNav } from '../../../lib/posts.mjs';
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post, nav: seriesNav(posts, post) } }));
+}
+
+const { post, nav } = Astro.props;
+const { title, description, pubDate, tags, series } = post.data;
+const repo = post.data.repo && findRepo(post.data.repo);
+const { Content } = await render(post);
+---
+<Base
+  title={title}
+  description={description}
+  crumbs={[CRUMBS.project, CRUMBS.posts, { name: title, path: paths.post(post.id) }]}
+  jsonLd={[blogPosting(post, repo)]}
+  image={paths.og(post.id)}
+  imageAlt={title}
+  type="article"
+  published={isoDate(pubDate)}
+  tags={tags}
+>
+  <article class="post">
+    <header class="post-header">
+      <p class="kicker">{series} · part {nav.position} of {nav.total}</p>
+      <h1>{title}</h1>
+      <p class="lede">{description}</p>
+      <p class="meta">
+        <time datetime={isoDate(pubDate)}>{formatDate(pubDate)}</time>
+        {repo && <> · <a href={repo.path ?? repo.github}><code>{repo.name}</code></a></>}
+        {tags.length > 0 && <> · {tags.map((tag) => <span class="tag">#{tag}</span>)}</>}
+      </p>
+    </header>
+    <div class="prose">
+      <Content />
+    </div>
+  </article>
+  <nav class="series-nav" aria-label={`${series} series`}>
+    {nav.prev && <a rel="prev" href={paths.post(nav.prev.id)}><span>Previous</span>{nav.prev.data.title}</a>}
+    {nav.next && <a rel="next" href={paths.post(nav.next.id)}><span>Next</span>{nav.next.data.title}</a>}
+  </nav>
+</Base>

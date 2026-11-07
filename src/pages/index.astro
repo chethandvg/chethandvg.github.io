@@ -1,0 +1,40 @@
+---
+// SPDX-License-Identifier: Apache-2.0
+import Base from '../layouts/Base.astro';
+import PostList from '../components/PostList.astro';
+import { PROFILE, PROJECT, layers, paths, repos } from '../lib/site.mjs';
+import { person, website } from '../lib/jsonld.mjs';
+import { getPosts } from '../lib/posts.mjs';
+
+const posts = (await getPosts()).slice(0, 5);
+const active = repos.filter((r) => r.path).length;
+---
+<Base
+  title={`${PROFILE.name} (${PROFILE.alternateName})`}
+  description={`${PROFILE.name} (${PROFILE.alternateName}): software engineer working with C#/.NET, Azure and applied AI, and author of ${PROJECT.name}.`}
+  jsonLd={[website(), person()]}
+>
+  <section class="intro">
+    <h1>{PROFILE.name}</h1>
+    <p class="aka">Also known as {PROFILE.alternateName}</p>
+    <p class="lede">I'm a software engineer working with C#/.NET, Azure and applied AI.</p>
+    <ul class="links">
+      <li><a rel="me" href={PROFILE.github}>GitHub</a></li>
+      <li><a rel="me" href={PROFILE.linkedin}>LinkedIn</a></li>
+      {PROFILE.orcid && <li><a rel="me" href={PROFILE.orcid}>ORCID</a></li>}
+    </ul>
+  </section>
+
+  <section class="feature" aria-labelledby="featured">
+    <p class="kicker">Featured project</p>
+    <h2 id="featured"><a href={paths.project}>{PROJECT.name}</a></h2>
+    <p>{PROJECT.tagline} Each claim is labelled proved, verified, tested, referenced or assumed, so you can see how far to trust it.</p>
+    <p class="muted">{repos.length} repositories in {layers.length} layers; {active} under way.</p>
+    <p><a href={paths.project}>Explore the project</a> · <a href={paths.posts}>Read the posts</a></p>
+  </section>
+
+  <section aria-labelledby="latest">
+    <h2 id="latest">Latest posts</h2>
+    <PostList posts={posts} />
+  </section>
+</Base>

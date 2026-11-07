@@ -1,0 +1,23 @@
+---
+// SPDX-License-Identifier: Apache-2.0
+import Base from '../../../layouts/Base.astro';
+import PostList from '../../../components/PostList.astro';
+import { CRUMBS, PROJECT, paths } from '../../../lib/site.mjs';
+import { getPosts } from '../../../lib/posts.mjs';
+
+const posts = await getPosts();
+---
+<Base
+  title={`Posts · ${PROJECT.name}`}
+  description={`Articles from ${PROJECT.name}: the mathematics, data and code behind each repository, one at a time.`}
+  crumbs={[CRUMBS.project, CRUMBS.posts]}
+>
+  <section class="intro">
+    <h1>Posts</h1>
+    <p class="lede">The {PROJECT.name} series: one article per repository, each linking to the code and evidence it describes.</p>
+    <p><a href={paths.rss}>Subscribe with RSS</a></p>
+  </section>
+  <section aria-label="All posts">
+    <PostList posts={posts} level={2} />
+  </section>
+</Base>

@@ -1,0 +1,12 @@
+---
+// SPDX-License-Identifier: Apache-2.0
+import Base from '../layouts/Base.astro';
+import { PROJECT, paths } from '../lib/site.mjs';
+---
+<Base title="Page not found" description="This page does not exist. Try the home page or the Frequencies of Life project." path="/404.html" noindex>
+  <section class="prose">
+    <h1>Page not found</h1>
+    <p>This page does not exist, or it has moved.</p>
+    <p><a href={paths.home}>Home</a> · <a href={paths.project}>{PROJECT.name}</a> · <a href={paths.posts}>Posts</a></p>
+  </section>
+</Base>

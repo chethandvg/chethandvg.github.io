@@ -1,0 +1,7 @@
+---
+// SPDX-License-Identifier: Apache-2.0
+import { level } from '../lib/site.mjs';
+const { id } = Astro.props;
+const known = level(id);
+---
+<abbr class={`level level-${known ? id : 'unknown'}`} title={known?.name ?? 'Unknown level'}>{id}</abbr>

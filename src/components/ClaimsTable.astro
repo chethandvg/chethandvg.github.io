@@ -1,0 +1,47 @@
+---
+// SPDX-License-Identifier: Apache-2.0
+// The repo's claims.yaml as a table: each claim, its proof level and its evidence.
+import Level from './Level.astro';
+const { repo } = Astro.props;
+const blob = (file) => `${repo.github}/blob/main/${file}`;
+const value = (v) => {
+  if (v == null || typeof v !== 'object') return v ?? '';
+  const unit = v.unit ? ` ${v.unit}` : '';
+  if ('min' in v && 'max' in v) return `${v.min}–${v.max}${unit}`;
+  return 'value' in v ? `${v.value}${unit}` : JSON.stringify(v);
+};
+---
+{repo.claims.length ? (
+  <div class="table-scroll">
+    <table class="claims">
+      <thead>
+        <tr><th scope="col">Claim</th><th scope="col">Level</th><th scope="col">Statement</th><th scope="col">Evidence</th></tr>
+      </thead>
+      <tbody>
+        {repo.claims.map((c) => (
+          <tr>
+            <td><code>{c.id}</code>{c.version && <span class="muted"> v{c.version}</span>}</td>
+            <td><Level id={c.level} /></td>
+            <td>
+              {c.statement ?? value(c.value)}
+              {c.species && <span class="muted"> (<i>{c.species}</i>{c.method && `; ${c.method}`})</span>}
+            </td>
+            <td>
+              <ul class="evidence">
+                {c.proof && <li>Proof: <a href={blob(c.proof.split('#')[0])}><code>{c.proof.split('#')[1] ?? c.proof}</code></a></li>}
+                {c.vectors && <li>Vectors: <a href={blob(c.vectors)}><code>{c.vectors}</code></a></li>}
+                {c.source && <li>{c.source.cite}{c.source.doi?.startsWith('10.') && <> (<a href={`https://doi.org/${c.source.doi}`}>doi:{c.source.doi}</a>)</>}</li>}
+                {c.depends_on?.length > 0 && <li>Uses: {c.depends_on.map((d) => <code>{d}</code>)}</li>}
+              </ul>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+) : (
+  <p class="muted">
+    No claims are recorded yet.
+    {repo.ledger && <> They will appear here as they land in <a href={blob('claims.yaml')}><code>claims.yaml</code></a>.</>}
+  </p>
+)}

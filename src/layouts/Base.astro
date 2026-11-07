@@ -1,0 +1,101 @@
+---
+// SPDX-License-Identifier: Apache-2.0
+// Every page: SEO head (canonical, Open Graph, Twitter, JSON-LD), header, breadcrumbs, footer.
+import '../styles/global.css';
+import { PROFILE, PROJECT, abs, paths } from '../lib/site.mjs';
+import { breadcrumbs, toScript } from '../lib/jsonld.mjs';
+
+const {
+  title,
+  description,
+  crumbs = [],
+  jsonLd = [],
+  image = paths.og(),
+  imageAlt = `${PROJECT.name}: ${PROJECT.tagline}`,
+  type = 'website',
+  published,
+  tags = [],
+  path = Astro.url.pathname,
+  noindex = false,
+} = Astro.props;
+
+const canonical = abs(path);
+const trail = crumbs.length ? [{ name: 'Home', path: paths.home }, ...crumbs] : [];
+const graph = trail.length ? [...jsonLd, breadcrumbs(trail)] : jsonLd;
+const fullTitle = path === paths.home ? title : `${title} · ${PROFILE.name}`;
+const nav = [
+  ['Home', paths.home],
+  [PROJECT.name, paths.project],
+  ['Posts', paths.posts],
+  ['About', paths.about],
+];
+const current = nav
+  .filter(([, href]) => (href === paths.home ? path === href : path.startsWith(href)))
+  .sort((a, b) => b[1].length - a[1].length)[0]?.[1];
+---
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <meta name="author" content={PROFILE.name} />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="alternate" type="application/rss+xml" title={`${PROJECT.name} posts`} href={paths.rss} />
+    <meta property="og:site_name" content={PROFILE.name} />
+    <meta property="og:locale" content="en_GB" />
+    <meta property="og:type" content={type} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={abs(image)} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={imageAlt} />
+    {published && <meta property="article:published_time" content={published} />}
+    {tags.map((tag) => <meta property="article:tag" content={tag} />)}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={abs(image)} />
+    <meta name="twitter:image:alt" content={imageAlt} />
+    {graph.length > 0 && <script type="application/ld+json" set:html={toScript(graph)}></script>}
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="site-header">
+      <div class="wrap">
+        <a class="brand" href={paths.home}>{PROFILE.alternateName}</a>
+        <nav aria-label="Main">
+          <ul>
+            {nav.map(([label, href]) => (
+              <li><a href={href} aria-current={href === current ? 'page' : undefined}>{label}</a></li>
+            ))}
+          </ul>
+        </nav>
+      </div>
+    </header>
+    <main id="main" class="wrap main">
+      {trail.length > 0 && (
+        <nav class="crumbs" aria-label="Breadcrumb">
+          <ol>
+            {trail.map((crumb, i) =>
+              i === trail.length - 1 ? <li aria-current="page">{crumb.name}</li> : <li><a href={crumb.path}>{crumb.name}</a></li>,
+            )}
+          </ol>
+        </nav>
+      )}
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <div class="wrap">
+        <p>© {new Date().getUTCFullYear()} {PROFILE.name}. Articles and data: <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a>. Code: <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache-2.0</a>.</p>
+        <p><a href={`${PROFILE.github}/chethandvg.github.io`}>Source</a> · <a href={paths.rss}>RSS</a> · <a href={PROFILE.github} rel="me">GitHub</a> · <a href={PROFILE.linkedin} rel="me">LinkedIn</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,6 @@
+# Claims ledger for chethandvg.github.io (schema evidence-kernel/claims@1, https://github.com/chethandvg/evidence-kernel).
+# Levels: P proved in Lean · V verified numerics · T tested · R referenced (DOI/PMID) · M model assumption.
+schema: evidence-kernel/claims@1
+repo: chethandvg.github.io
+prefix: site
+claims: []

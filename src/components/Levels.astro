@@ -1,0 +1,14 @@
+---
+// SPDX-License-Identifier: Apache-2.0
+// The proof-level legend: P, V, T, R, M.
+import Level from './Level.astro';
+import { LEVELS } from '../lib/site.mjs';
+---
+<dl class="levels">
+  {LEVELS.map((l) => (
+    <div>
+      <dt><Level id={l.id} /> {l.name}</dt>
+      <dd>{l.text}</dd>
+    </div>
+  ))}
+</dl>

@@ -1,0 +1,65 @@
+---
+// SPDX-License-Identifier: Apache-2.0
+import Base from '../../layouts/Base.astro';
+import DepGraph from '../../components/DepGraph.astro';
+import Levels from '../../components/Levels.astro';
+import PostList from '../../components/PostList.astro';
+import Status from '../../components/Status.astro';
+import { CRUMBS, PROJECT, layers, paths } from '../../lib/site.mjs';
+import { projectPage } from '../../lib/jsonld.mjs';
+import { getPosts } from '../../lib/posts.mjs';
+
+const posts = (await getPosts()).slice(0, 3);
+---
+<Base
+  title={PROJECT.name}
+  description={`${PROJECT.name}: open, tested code for the rhythms of life, where every claim says how it is known: proved, verified, tested, referenced or assumed.`}
+  crumbs={[CRUMBS.project]}
+  jsonLd={[projectPage()]}
+>
+  <section class="intro">
+    <h1>{PROJECT.name}</h1>
+    <p class="lede">{PROJECT.tagline}</p>
+    <p>
+      The project is a set of small, open repositories. The foundations prove their mathematics; the layers above add referenced data,
+      models and applications, and reuse the code below them instead of rewriting it. Every claim in a repository's
+      <code>claims.yaml</code> carries one of five proof levels.
+    </p>
+  </section>
+
+  <section aria-labelledby="levels">
+    <h2 id="levels">Proof levels</h2>
+    <Levels />
+  </section>
+
+  <section class="wide" aria-labelledby="graph">
+    <h2 id="graph">How the repositories depend on each other</h2>
+    <DepGraph />
+  </section>
+
+  <section aria-labelledby="repos">
+    <h2 id="repos">Repositories by layer</h2>
+    {layers.map((layer) => (
+      <section class="layer" aria-labelledby={`layer-${layer.id}`}>
+        <h3 id={`layer-${layer.id}`}>{layer.label}: {layer.text}</h3>
+        <ul class="repo-list">
+          {layer.repos.map((r) => (
+            <li>
+              <p class="repo-head">
+                {r.path ? <a href={r.path}><code>{r.name}</code></a> : <code>{r.name}</code>} <Status status={r.status} />
+              </p>
+              <p>{r.description}</p>
+              <p class="meta">{r.licences.join(' · ')}</p>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))}
+  </section>
+
+  <section aria-labelledby="posts">
+    <h2 id="posts">Posts</h2>
+    <PostList posts={posts} />
+    <p><a href={paths.posts}>All posts</a> · <a href={paths.rss}>RSS feed</a></p>
+  </section>
+</Base>

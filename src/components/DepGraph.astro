@@ -1,0 +1,39 @@
+---
+// SPDX-License-Identifier: Apache-2.0
+// The repo dependency graph as inline SVG. Colours come from CSS tokens, so it follows
+// the light or dark theme; no client JS.
+import { layers, repos } from '../lib/site.mjs';
+import { NODE, layoutGraph } from '../lib/graph.mjs';
+
+const { width, height, bands, nodes, edges } = layoutGraph(repos, layers);
+const lineHeight = 15;
+const textY = (n, i) => n.y + (NODE.h - lineHeight * (n.lines.length + 1)) / 2 + 11 + i * lineHeight;
+---
+<figure class="dag-figure">
+  <div class="dag-scroll">
+    <svg class="dag" viewBox={`0 0 ${width} ${height}`} width={width} height={height} role="img" aria-labelledby="dag-title dag-desc">
+      <title id="dag-title">How the Frequencies of Life repositories depend on each other</title>
+      <desc id="dag-desc">{`${repos.length} repositories in ${bands.length} layers. Each arrow points from a repository to one that depends on it. The lists below give the same information as text.`}</desc>
+      <defs>
+        <marker id="dag-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path class="dag-arrowhead" d="M0 0L10 5L0 10z" />
+        </marker>
+      </defs>
+      {bands.map((b) => <rect class="dag-band" x="4" y={b.y} width={width - 8} height={b.h} rx="8" />)}
+      {edges.map((e) => <path class:list={['dag-edge', { planned: e.planned }]} d={e.d} marker-end="url(#dag-arrow)" />)}
+      {bands.map((b) => <text class="dag-band-label" x="16" y={b.y + 19}>{`${b.label} · ${b.text.split(':')[0]}`}</text>)}
+      {nodes.map((n) => {
+        const Tag = n.repo.path ? 'a' : 'g';
+        return (
+          <Tag href={n.repo.path ?? undefined} class:list={['dag-node', { planned: !n.repo.path }]}>
+            <title>{`${n.repo.title}: ${n.repo.status}`}</title>
+            <rect x={n.x} y={n.y} width={NODE.w} height={NODE.h} rx="6" />
+            {n.lines.map((line, i) => <text class="dag-name" x={n.x + NODE.w / 2} y={textY(n, i)}>{line}</text>)}
+            <text class="dag-status" x={n.x + NODE.w / 2} y={textY(n, n.lines.length)}>{n.repo.status}</text>
+          </Tag>
+        );
+      })}
+    </svg>
+  </div>
+  <figcaption>Solid boxes link to a repository page; dashed boxes and lines are planned. Arrows run from a dependency to the repository that uses it.</figcaption>
+</figure>

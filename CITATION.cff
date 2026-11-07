@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: "If you use this work, please cite it using these metadata."
+type: software
+title: "Chethan Dandebala Venkatarama"
+abstract: "Personal site of Chethan Dandebala Venkatarama and home of the Frequencies of Life project."
+authors:
+  - given-names: "Chethan"
+    family-names: "Dandebala Venkatarama"
+    alias: "chethandvg"
+    orcid: "https://orcid.org/0009-0006-6099-343X"
+repository-code: "https://github.com/chethandvg/chethandvg.github.io"
+url: "https://chethandvg.github.io/frequencies-of-life/repos/chethandvg.github.io/"
+license:
+  - Apache-2.0
+  - CC-BY-NC-4.0
+version: 0.1.0
+date-released: "2026-11-07"
+keywords:
+  - frequencies-of-life
+  - sonification
+  - formal-verification
+  - research-software

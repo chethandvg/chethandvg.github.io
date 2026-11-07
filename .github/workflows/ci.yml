@@ -1,0 +1,18 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  site:
+    uses: chethandvg/.github/.github/workflows/pages-deploy.yml@v1
+    with:
+      deploy: ${{ github.event_name != 'pull_request' }}

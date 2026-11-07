@@ -1,0 +1,13 @@
+---
+// SPDX-License-Identifier: Apache-2.0
+// A list of repos: linked to their hub page unless planned.
+import Status from './Status.astro';
+const { repos, empty } = Astro.props;
+---
+{repos.length ? (
+  <ul class="repo-links">
+    {repos.map((r) => (
+      <li>{r.path ? <a href={r.path}><code>{r.name}</code></a> : <code>{r.name}</code>} <Status status={r.status} /></li>
+    ))}
+  </ul>
+) : <p class="muted">{empty}</p>}
