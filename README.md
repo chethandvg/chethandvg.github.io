@@ -7,7 +7,7 @@
 
 Part of **[Frequencies of Life](https://chethandvg.github.io/frequencies-of-life/)**, open code for the rhythms of life in which every claim says how it is known: proved, verified, tested, referenced or assumed.
 
-## What is proved
+## Claims and evidence
 
 <!-- claims-table:start -->
 _No claims yet._
